@@ -1,0 +1,9 @@
+type Producto @db(name: "productos") {
+  _id: ID! @id
+  cantidad: Float
+  codigo: Float
+  enabled: Float
+  nombre: String
+  precio: Float
+  provincia: Float
+}
