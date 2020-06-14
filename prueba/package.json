@@ -5,12 +5,15 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts"
+    "start": "ts-node server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "graphql": "^15.1.0",
+    "morgan": "^1.10.0",
     "prisma-client-lib": "^1.34.10"
   }
 }
