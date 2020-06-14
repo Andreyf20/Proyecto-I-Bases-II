@@ -1,5 +1,5 @@
 const { prisma } = require('../generated/prisma-client')
-var express = require('express');
+import express = require('express');
 var router = express.Router();
 
 /*const newProduct=await prisma.createProducto({cantidad:15,codigo:17,enabled:1,provincia:2,nombre:"Prueba3",precio:50})
@@ -14,4 +14,4 @@ router.get('/productos', async (req, res)=> {
   res.send(allProducts)
 })
 
-module.exports = router;
+export = router;

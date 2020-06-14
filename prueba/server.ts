@@ -1,8 +1,9 @@
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var apiRouter = require('./api/index.ts');
-var express = require('express');
-var app = express();
+import bodyParser = require('body-parser');
+import morgan = require('morgan');
+import apiRouter = require('./api/index');
+import express = require('express');
+
+const app: express.Application = express();
 
 //middlewares
 app.use(morgan('dev'));
