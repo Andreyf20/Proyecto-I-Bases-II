@@ -1,9 +1,10 @@
-import bodyParser = require('body-parser');
-import morgan = require('morgan');
-import apiRouter = require('./api/index');
-import express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const apiRouter = require('./api/index');
+const express = require('express');
+const app = express();
 
-const app: express.Application = express();
+var PORT = 8080
 
 //middlewares
 app.use(morgan('dev'));
@@ -12,4 +13,12 @@ app.use(bodyParser.json());
 //routes
 app.use('/', apiRouter);
 
-app.listen(process.env.PORT || 3000);
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send({error : 'Unauthorized :('});
+    }
+});
+
+app.listen(PORT, () => {
+    console.log("Running on " + PORT);
+});
