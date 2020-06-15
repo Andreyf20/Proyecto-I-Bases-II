@@ -16,7 +16,8 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
-  producto: (where?: ProductoWhereInput) => Promise<boolean>;
+  productos: (where?: productosWhereInput) => Promise<boolean>;
+  usuarios: (where?: usuariosWhereInput) => Promise<boolean>;
 }
 
 export interface Node {}
@@ -38,47 +39,82 @@ export interface Prisma {
    * Queries
    */
 
-  producto: (where: ProductoWhereUniqueInput) => ProductoNullablePromise;
-  productoes: (args?: {
-    where?: ProductoWhereInput;
-    orderBy?: ProductoOrderByInput;
+  productos: (where: productosWhereUniqueInput) => productosNullablePromise;
+  productoses: (args?: {
+    where?: productosWhereInput;
+    orderBy?: productosOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => FragmentableArray<Producto>;
-  productoesConnection: (args?: {
-    where?: ProductoWhereInput;
-    orderBy?: ProductoOrderByInput;
+  }) => FragmentableArray<productos>;
+  productosesConnection: (args?: {
+    where?: productosWhereInput;
+    orderBy?: productosOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => ProductoConnectionPromise;
+  }) => productosConnectionPromise;
+  usuarios: (where: usuariosWhereUniqueInput) => usuariosNullablePromise;
+  usuarioses: (args?: {
+    where?: usuariosWhereInput;
+    orderBy?: usuariosOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<usuarios>;
+  usuariosesConnection: (args?: {
+    where?: usuariosWhereInput;
+    orderBy?: usuariosOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => usuariosConnectionPromise;
   node: (args: { id: ID_Output }) => Node;
 
   /**
    * Mutations
    */
 
-  createProducto: (data: ProductoCreateInput) => ProductoPromise;
-  updateProducto: (args: {
-    data: ProductoUpdateInput;
-    where: ProductoWhereUniqueInput;
-  }) => ProductoPromise;
-  updateManyProductoes: (args: {
-    data: ProductoUpdateManyMutationInput;
-    where?: ProductoWhereInput;
+  createproductos: (data: productosCreateInput) => productosPromise;
+  updateproductos: (args: {
+    data: productosUpdateInput;
+    where: productosWhereUniqueInput;
+  }) => productosPromise;
+  updateManyproductoses: (args: {
+    data: productosUpdateManyMutationInput;
+    where?: productosWhereInput;
   }) => BatchPayloadPromise;
-  upsertProducto: (args: {
-    where: ProductoWhereUniqueInput;
-    create: ProductoCreateInput;
-    update: ProductoUpdateInput;
-  }) => ProductoPromise;
-  deleteProducto: (where: ProductoWhereUniqueInput) => ProductoPromise;
-  deleteManyProductoes: (where?: ProductoWhereInput) => BatchPayloadPromise;
+  upsertproductos: (args: {
+    where: productosWhereUniqueInput;
+    create: productosCreateInput;
+    update: productosUpdateInput;
+  }) => productosPromise;
+  deleteproductos: (where: productosWhereUniqueInput) => productosPromise;
+  deleteManyproductoses: (where?: productosWhereInput) => BatchPayloadPromise;
+  createusuarios: (data: usuariosCreateInput) => usuariosPromise;
+  updateusuarios: (args: {
+    data: usuariosUpdateInput;
+    where: usuariosWhereUniqueInput;
+  }) => usuariosPromise;
+  updateManyusuarioses: (args: {
+    data: usuariosUpdateManyMutationInput;
+    where?: usuariosWhereInput;
+  }) => BatchPayloadPromise;
+  upsertusuarios: (args: {
+    where: usuariosWhereUniqueInput;
+    create: usuariosCreateInput;
+    update: usuariosUpdateInput;
+  }) => usuariosPromise;
+  deleteusuarios: (where: usuariosWhereUniqueInput) => usuariosPromise;
+  deleteManyusuarioses: (where?: usuariosWhereInput) => BatchPayloadPromise;
 
   /**
    * Subscriptions
@@ -88,9 +124,12 @@ export interface Prisma {
 }
 
 export interface Subscription {
-  producto: (
-    where?: ProductoSubscriptionWhereInput
-  ) => ProductoSubscriptionPayloadSubscription;
+  productos: (
+    where?: productosSubscriptionWhereInput
+  ) => productosSubscriptionPayloadSubscription;
+  usuarios: (
+    where?: usuariosSubscriptionWhereInput
+  ) => usuariosSubscriptionPayloadSubscription;
 }
 
 export interface ClientConstructor<T> {
@@ -101,7 +140,7 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type ProductoOrderByInput =
+export type productosOrderByInput =
   | "_id_ASC"
   | "_id_DESC"
   | "cantidad_ASC"
@@ -114,16 +153,26 @@ export type ProductoOrderByInput =
   | "nombre_DESC"
   | "precio_ASC"
   | "precio_DESC"
+  | "productor_ASC"
+  | "productor_DESC"
   | "provincia_ASC"
   | "provincia_DESC";
 
+export type usuariosOrderByInput =
+  | "_id_ASC"
+  | "_id_DESC"
+  | "email_ASC"
+  | "email_DESC"
+  | "password_ASC"
+  | "password_DESC";
+
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type ProductoWhereUniqueInput = AtLeastOne<{
+export type productosWhereUniqueInput = AtLeastOne<{
   _id: Maybe<ID_Input>;
 }>;
 
-export interface ProductoWhereInput {
+export interface productosWhereInput {
   _id?: Maybe<ID_Input>;
   _id_not?: Maybe<ID_Input>;
   _id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -184,6 +233,20 @@ export interface ProductoWhereInput {
   precio_lte?: Maybe<Float>;
   precio_gt?: Maybe<Float>;
   precio_gte?: Maybe<Float>;
+  productor?: Maybe<String>;
+  productor_not?: Maybe<String>;
+  productor_in?: Maybe<String[] | String>;
+  productor_not_in?: Maybe<String[] | String>;
+  productor_lt?: Maybe<String>;
+  productor_lte?: Maybe<String>;
+  productor_gt?: Maybe<String>;
+  productor_gte?: Maybe<String>;
+  productor_contains?: Maybe<String>;
+  productor_not_contains?: Maybe<String>;
+  productor_starts_with?: Maybe<String>;
+  productor_not_starts_with?: Maybe<String>;
+  productor_ends_with?: Maybe<String>;
+  productor_not_ends_with?: Maybe<String>;
   provincia?: Maybe<Float>;
   provincia_not?: Maybe<Float>;
   provincia_in?: Maybe<Float[] | Float>;
@@ -192,45 +255,136 @@ export interface ProductoWhereInput {
   provincia_lte?: Maybe<Float>;
   provincia_gt?: Maybe<Float>;
   provincia_gte?: Maybe<Float>;
-  AND?: Maybe<ProductoWhereInput[] | ProductoWhereInput>;
+  AND?: Maybe<productosWhereInput[] | productosWhereInput>;
 }
 
-export interface ProductoCreateInput {
+export type usuariosWhereUniqueInput = AtLeastOne<{
+  _id: Maybe<ID_Input>;
+}>;
+
+export interface usuariosWhereInput {
+  _id?: Maybe<ID_Input>;
+  _id_not?: Maybe<ID_Input>;
+  _id_in?: Maybe<ID_Input[] | ID_Input>;
+  _id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  _id_lt?: Maybe<ID_Input>;
+  _id_lte?: Maybe<ID_Input>;
+  _id_gt?: Maybe<ID_Input>;
+  _id_gte?: Maybe<ID_Input>;
+  _id_contains?: Maybe<ID_Input>;
+  _id_not_contains?: Maybe<ID_Input>;
+  _id_starts_with?: Maybe<ID_Input>;
+  _id_not_starts_with?: Maybe<ID_Input>;
+  _id_ends_with?: Maybe<ID_Input>;
+  _id_not_ends_with?: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
+  AND?: Maybe<usuariosWhereInput[] | usuariosWhereInput>;
+}
+
+export interface productosCreateInput {
   _id?: Maybe<ID_Input>;
   cantidad?: Maybe<Float>;
   codigo?: Maybe<Float>;
   enabled?: Maybe<Float>;
   nombre?: Maybe<String>;
   precio?: Maybe<Float>;
+  productor?: Maybe<String>;
   provincia?: Maybe<Float>;
 }
 
-export interface ProductoUpdateInput {
+export interface productosUpdateInput {
   cantidad?: Maybe<Float>;
   codigo?: Maybe<Float>;
   enabled?: Maybe<Float>;
   nombre?: Maybe<String>;
   precio?: Maybe<Float>;
+  productor?: Maybe<String>;
   provincia?: Maybe<Float>;
 }
 
-export interface ProductoUpdateManyMutationInput {
+export interface productosUpdateManyMutationInput {
   cantidad?: Maybe<Float>;
   codigo?: Maybe<Float>;
   enabled?: Maybe<Float>;
   nombre?: Maybe<String>;
   precio?: Maybe<Float>;
+  productor?: Maybe<String>;
   provincia?: Maybe<Float>;
 }
 
-export interface ProductoSubscriptionWhereInput {
+export interface usuariosCreateInput {
+  _id?: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  tokens?: Maybe<usuariosCreatetokensInput>;
+}
+
+export interface usuariosCreatetokensInput {
+  set?: Maybe<String[] | String>;
+}
+
+export interface usuariosUpdateInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  tokens?: Maybe<usuariosUpdatetokensInput>;
+}
+
+export interface usuariosUpdatetokensInput {
+  set?: Maybe<String[] | String>;
+}
+
+export interface usuariosUpdateManyMutationInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  tokens?: Maybe<usuariosUpdatetokensInput>;
+}
+
+export interface productosSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
   updatedFields_contains_every?: Maybe<String[] | String>;
   updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ProductoWhereInput>;
+  node?: Maybe<productosWhereInput>;
   AND?: Maybe<
-    ProductoSubscriptionWhereInput[] | ProductoSubscriptionWhereInput
+    productosSubscriptionWhereInput[] | productosSubscriptionWhereInput
+  >;
+}
+
+export interface usuariosSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<usuariosWhereInput>;
+  AND?: Maybe<
+    usuariosSubscriptionWhereInput[] | usuariosSubscriptionWhereInput
   >;
 }
 
@@ -238,28 +392,30 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface Producto {
+export interface productos {
   _id: ID_Output;
   cantidad?: Float;
   codigo?: Float;
   enabled?: Float;
   nombre?: String;
   precio?: Float;
+  productor?: String;
   provincia?: Float;
 }
 
-export interface ProductoPromise extends Promise<Producto>, Fragmentable {
+export interface productosPromise extends Promise<productos>, Fragmentable {
   _id: () => Promise<ID_Output>;
   cantidad: () => Promise<Float>;
   codigo: () => Promise<Float>;
   enabled: () => Promise<Float>;
   nombre: () => Promise<String>;
   precio: () => Promise<Float>;
+  productor: () => Promise<String>;
   provincia: () => Promise<Float>;
 }
 
-export interface ProductoSubscription
-  extends Promise<AsyncIterator<Producto>>,
+export interface productosSubscription
+  extends Promise<AsyncIterator<productos>>,
     Fragmentable {
   _id: () => Promise<AsyncIterator<ID_Output>>;
   cantidad: () => Promise<AsyncIterator<Float>>;
@@ -267,11 +423,12 @@ export interface ProductoSubscription
   enabled: () => Promise<AsyncIterator<Float>>;
   nombre: () => Promise<AsyncIterator<String>>;
   precio: () => Promise<AsyncIterator<Float>>;
+  productor: () => Promise<AsyncIterator<String>>;
   provincia: () => Promise<AsyncIterator<Float>>;
 }
 
-export interface ProductoNullablePromise
-  extends Promise<Producto | null>,
+export interface productosNullablePromise
+  extends Promise<productos | null>,
     Fragmentable {
   _id: () => Promise<ID_Output>;
   cantidad: () => Promise<Float>;
@@ -279,28 +436,29 @@ export interface ProductoNullablePromise
   enabled: () => Promise<Float>;
   nombre: () => Promise<String>;
   precio: () => Promise<Float>;
+  productor: () => Promise<String>;
   provincia: () => Promise<Float>;
 }
 
-export interface ProductoConnection {
+export interface productosConnection {
   pageInfo: PageInfo;
-  edges: ProductoEdge[];
+  edges: productosEdge[];
 }
 
-export interface ProductoConnectionPromise
-  extends Promise<ProductoConnection>,
+export interface productosConnectionPromise
+  extends Promise<productosConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ProductoEdge>>() => T;
-  aggregate: <T = AggregateProductoPromise>() => T;
+  edges: <T = FragmentableArray<productosEdge>>() => T;
+  aggregate: <T = AggregateproductosPromise>() => T;
 }
 
-export interface ProductoConnectionSubscription
-  extends Promise<AsyncIterator<ProductoConnection>>,
+export interface productosConnectionSubscription
+  extends Promise<AsyncIterator<productosConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ProductoEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateProductoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<productosEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateproductosSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -326,37 +484,125 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface ProductoEdge {
-  node: Producto;
+export interface productosEdge {
+  node: productos;
   cursor: String;
 }
 
-export interface ProductoEdgePromise
-  extends Promise<ProductoEdge>,
+export interface productosEdgePromise
+  extends Promise<productosEdge>,
     Fragmentable {
-  node: <T = ProductoPromise>() => T;
+  node: <T = productosPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface ProductoEdgeSubscription
-  extends Promise<AsyncIterator<ProductoEdge>>,
+export interface productosEdgeSubscription
+  extends Promise<AsyncIterator<productosEdge>>,
     Fragmentable {
-  node: <T = ProductoSubscription>() => T;
+  node: <T = productosSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateProducto {
+export interface Aggregateproductos {
   count: Int;
 }
 
-export interface AggregateProductoPromise
-  extends Promise<AggregateProducto>,
+export interface AggregateproductosPromise
+  extends Promise<Aggregateproductos>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateProductoSubscription
-  extends Promise<AsyncIterator<AggregateProducto>>,
+export interface AggregateproductosSubscription
+  extends Promise<AsyncIterator<Aggregateproductos>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface usuarios {
+  _id: ID_Output;
+  email?: String;
+  password?: String;
+  tokens: String[];
+}
+
+export interface usuariosPromise extends Promise<usuarios>, Fragmentable {
+  _id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  tokens: () => Promise<String[]>;
+}
+
+export interface usuariosSubscription
+  extends Promise<AsyncIterator<usuarios>>,
+    Fragmentable {
+  _id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  tokens: () => Promise<AsyncIterator<String[]>>;
+}
+
+export interface usuariosNullablePromise
+  extends Promise<usuarios | null>,
+    Fragmentable {
+  _id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  tokens: () => Promise<String[]>;
+}
+
+export interface usuariosConnection {
+  pageInfo: PageInfo;
+  edges: usuariosEdge[];
+}
+
+export interface usuariosConnectionPromise
+  extends Promise<usuariosConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<usuariosEdge>>() => T;
+  aggregate: <T = AggregateusuariosPromise>() => T;
+}
+
+export interface usuariosConnectionSubscription
+  extends Promise<AsyncIterator<usuariosConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<usuariosEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateusuariosSubscription>() => T;
+}
+
+export interface usuariosEdge {
+  node: usuarios;
+  cursor: String;
+}
+
+export interface usuariosEdgePromise
+  extends Promise<usuariosEdge>,
+    Fragmentable {
+  node: <T = usuariosPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface usuariosEdgeSubscription
+  extends Promise<AsyncIterator<usuariosEdge>>,
+    Fragmentable {
+  node: <T = usuariosSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Aggregateusuarios {
+  count: Int;
+}
+
+export interface AggregateusuariosPromise
+  extends Promise<Aggregateusuarios>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateusuariosSubscription
+  extends Promise<AsyncIterator<Aggregateusuarios>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -377,43 +623,44 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface ProductoSubscriptionPayload {
+export interface productosSubscriptionPayload {
   mutation: MutationType;
-  node: Producto;
+  node: productos;
   updatedFields: String[];
-  previousValues: ProductoPreviousValues;
+  previousValues: productosPreviousValues;
 }
 
-export interface ProductoSubscriptionPayloadPromise
-  extends Promise<ProductoSubscriptionPayload>,
+export interface productosSubscriptionPayloadPromise
+  extends Promise<productosSubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = ProductoPromise>() => T;
+  node: <T = productosPromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = ProductoPreviousValuesPromise>() => T;
+  previousValues: <T = productosPreviousValuesPromise>() => T;
 }
 
-export interface ProductoSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ProductoSubscriptionPayload>>,
+export interface productosSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<productosSubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ProductoSubscription>() => T;
+  node: <T = productosSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ProductoPreviousValuesSubscription>() => T;
+  previousValues: <T = productosPreviousValuesSubscription>() => T;
 }
 
-export interface ProductoPreviousValues {
+export interface productosPreviousValues {
   _id: ID_Output;
   cantidad?: Float;
   codigo?: Float;
   enabled?: Float;
   nombre?: String;
   precio?: Float;
+  productor?: String;
   provincia?: Float;
 }
 
-export interface ProductoPreviousValuesPromise
-  extends Promise<ProductoPreviousValues>,
+export interface productosPreviousValuesPromise
+  extends Promise<productosPreviousValues>,
     Fragmentable {
   _id: () => Promise<ID_Output>;
   cantidad: () => Promise<Float>;
@@ -421,11 +668,12 @@ export interface ProductoPreviousValuesPromise
   enabled: () => Promise<Float>;
   nombre: () => Promise<String>;
   precio: () => Promise<Float>;
+  productor: () => Promise<String>;
   provincia: () => Promise<Float>;
 }
 
-export interface ProductoPreviousValuesSubscription
-  extends Promise<AsyncIterator<ProductoPreviousValues>>,
+export interface productosPreviousValuesSubscription
+  extends Promise<AsyncIterator<productosPreviousValues>>,
     Fragmentable {
   _id: () => Promise<AsyncIterator<ID_Output>>;
   cantidad: () => Promise<AsyncIterator<Float>>;
@@ -433,7 +681,58 @@ export interface ProductoPreviousValuesSubscription
   enabled: () => Promise<AsyncIterator<Float>>;
   nombre: () => Promise<AsyncIterator<String>>;
   precio: () => Promise<AsyncIterator<Float>>;
+  productor: () => Promise<AsyncIterator<String>>;
   provincia: () => Promise<AsyncIterator<Float>>;
+}
+
+export interface usuariosSubscriptionPayload {
+  mutation: MutationType;
+  node: usuarios;
+  updatedFields: String[];
+  previousValues: usuariosPreviousValues;
+}
+
+export interface usuariosSubscriptionPayloadPromise
+  extends Promise<usuariosSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = usuariosPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = usuariosPreviousValuesPromise>() => T;
+}
+
+export interface usuariosSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<usuariosSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = usuariosSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = usuariosPreviousValuesSubscription>() => T;
+}
+
+export interface usuariosPreviousValues {
+  _id: ID_Output;
+  email?: String;
+  password?: String;
+  tokens: String[];
+}
+
+export interface usuariosPreviousValuesPromise
+  extends Promise<usuariosPreviousValues>,
+    Fragmentable {
+  _id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  tokens: () => Promise<String[]>;
+}
+
+export interface usuariosPreviousValuesSubscription
+  extends Promise<AsyncIterator<usuariosPreviousValues>>,
+    Fragmentable {
+  _id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  tokens: () => Promise<AsyncIterator<String[]>>;
 }
 
 /*
@@ -470,7 +769,11 @@ export type Long = string;
 
 export const models: Model[] = [
   {
-    name: "Producto",
+    name: "productos",
+    embedded: false
+  },
+  {
+    name: "usuarios",
     embedded: false
   }
 ];
@@ -482,6 +785,6 @@ export const models: Model[] = [
 export const Prisma = makePrismaClientClass<ClientConstructor<Prisma>>({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466/Productos/`
+  endpoint: `http://localhost:4466/`
 });
 export const prisma = new Prisma();

@@ -2,7 +2,11 @@
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-export const typeDefs = /* GraphQL */ `type AggregateProducto {
+export const typeDefs = /* GraphQL */ `type Aggregateproductos {
+  count: Int!
+}
+
+type Aggregateusuarios {
   count: Int!
 }
 
@@ -13,12 +17,18 @@ type BatchPayload {
 scalar Long
 
 type Mutation {
-  createProducto(data: ProductoCreateInput!): Producto!
-  updateProducto(data: ProductoUpdateInput!, where: ProductoWhereUniqueInput!): Producto
-  updateManyProductoes(data: ProductoUpdateManyMutationInput!, where: ProductoWhereInput): BatchPayload!
-  upsertProducto(where: ProductoWhereUniqueInput!, create: ProductoCreateInput!, update: ProductoUpdateInput!): Producto!
-  deleteProducto(where: ProductoWhereUniqueInput!): Producto
-  deleteManyProductoes(where: ProductoWhereInput): BatchPayload!
+  createproductos(data: productosCreateInput!): productos!
+  updateproductos(data: productosUpdateInput!, where: productosWhereUniqueInput!): productos
+  updateManyproductoses(data: productosUpdateManyMutationInput!, where: productosWhereInput): BatchPayload!
+  upsertproductos(where: productosWhereUniqueInput!, create: productosCreateInput!, update: productosUpdateInput!): productos!
+  deleteproductos(where: productosWhereUniqueInput!): productos
+  deleteManyproductoses(where: productosWhereInput): BatchPayload!
+  createusuarios(data: usuariosCreateInput!): usuarios!
+  updateusuarios(data: usuariosUpdateInput!, where: usuariosWhereUniqueInput!): usuarios
+  updateManyusuarioses(data: usuariosUpdateManyMutationInput!, where: usuariosWhereInput): BatchPayload!
+  upsertusuarios(where: usuariosWhereUniqueInput!, create: usuariosCreateInput!, update: usuariosUpdateInput!): usuarios!
+  deleteusuarios(where: usuariosWhereUniqueInput!): usuarios
+  deleteManyusuarioses(where: usuariosWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -38,38 +48,40 @@ type PageInfo {
   endCursor: String
 }
 
-type Producto {
+type productos {
   _id: ID!
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
 }
 
-type ProductoConnection {
+type productosConnection {
   pageInfo: PageInfo!
-  edges: [ProductoEdge]!
-  aggregate: AggregateProducto!
+  edges: [productosEdge]!
+  aggregate: Aggregateproductos!
 }
 
-input ProductoCreateInput {
+input productosCreateInput {
   _id: ID
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
 }
 
-type ProductoEdge {
-  node: Producto!
+type productosEdge {
+  node: productos!
   cursor: String!
 }
 
-enum ProductoOrderByInput {
+enum productosOrderByInput {
   _id_ASC
   _id_DESC
   cantidad_ASC
@@ -82,55 +94,60 @@ enum ProductoOrderByInput {
   nombre_DESC
   precio_ASC
   precio_DESC
+  productor_ASC
+  productor_DESC
   provincia_ASC
   provincia_DESC
 }
 
-type ProductoPreviousValues {
+type productosPreviousValues {
   _id: ID!
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
 }
 
-type ProductoSubscriptionPayload {
+type productosSubscriptionPayload {
   mutation: MutationType!
-  node: Producto
+  node: productos
   updatedFields: [String!]
-  previousValues: ProductoPreviousValues
+  previousValues: productosPreviousValues
 }
 
-input ProductoSubscriptionWhereInput {
+input productosSubscriptionWhereInput {
   mutation_in: [MutationType!]
   updatedFields_contains: String
   updatedFields_contains_every: [String!]
   updatedFields_contains_some: [String!]
-  node: ProductoWhereInput
-  AND: [ProductoSubscriptionWhereInput!]
+  node: productosWhereInput
+  AND: [productosSubscriptionWhereInput!]
 }
 
-input ProductoUpdateInput {
+input productosUpdateInput {
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
 }
 
-input ProductoUpdateManyMutationInput {
+input productosUpdateManyMutationInput {
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
 }
 
-input ProductoWhereInput {
+input productosWhereInput {
   _id: ID
   _id_not: ID
   _id_in: [ID!]
@@ -191,6 +208,20 @@ input ProductoWhereInput {
   precio_lte: Float
   precio_gt: Float
   precio_gte: Float
+  productor: String
+  productor_not: String
+  productor_in: [String!]
+  productor_not_in: [String!]
+  productor_lt: String
+  productor_lte: String
+  productor_gt: String
+  productor_gte: String
+  productor_contains: String
+  productor_not_contains: String
+  productor_starts_with: String
+  productor_not_starts_with: String
+  productor_ends_with: String
+  productor_not_ends_with: String
   provincia: Float
   provincia_not: Float
   provincia_in: [Float!]
@@ -199,21 +230,152 @@ input ProductoWhereInput {
   provincia_lte: Float
   provincia_gt: Float
   provincia_gte: Float
-  AND: [ProductoWhereInput!]
+  AND: [productosWhereInput!]
 }
 
-input ProductoWhereUniqueInput {
+input productosWhereUniqueInput {
   _id: ID
 }
 
 type Query {
-  producto(where: ProductoWhereUniqueInput!): Producto
-  productoes(where: ProductoWhereInput, orderBy: ProductoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Producto]!
-  productoesConnection(where: ProductoWhereInput, orderBy: ProductoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductoConnection!
+  productos(where: productosWhereUniqueInput!): productos
+  productoses(where: productosWhereInput, orderBy: productosOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [productos]!
+  productosesConnection(where: productosWhereInput, orderBy: productosOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): productosConnection!
+  usuarios(where: usuariosWhereUniqueInput!): usuarios
+  usuarioses(where: usuariosWhereInput, orderBy: usuariosOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [usuarios]!
+  usuariosesConnection(where: usuariosWhereInput, orderBy: usuariosOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): usuariosConnection!
   node(id: ID!): Node
 }
 
 type Subscription {
-  producto(where: ProductoSubscriptionWhereInput): ProductoSubscriptionPayload
+  productos(where: productosSubscriptionWhereInput): productosSubscriptionPayload
+  usuarios(where: usuariosSubscriptionWhereInput): usuariosSubscriptionPayload
+}
+
+type usuarios {
+  _id: ID!
+  email: String
+  password: String
+  tokens: [String!]!
+}
+
+type usuariosConnection {
+  pageInfo: PageInfo!
+  edges: [usuariosEdge]!
+  aggregate: Aggregateusuarios!
+}
+
+input usuariosCreateInput {
+  _id: ID
+  email: String
+  password: String
+  tokens: usuariosCreatetokensInput
+}
+
+input usuariosCreatetokensInput {
+  set: [String!]
+}
+
+type usuariosEdge {
+  node: usuarios!
+  cursor: String!
+}
+
+enum usuariosOrderByInput {
+  _id_ASC
+  _id_DESC
+  email_ASC
+  email_DESC
+  password_ASC
+  password_DESC
+}
+
+type usuariosPreviousValues {
+  _id: ID!
+  email: String
+  password: String
+  tokens: [String!]!
+}
+
+type usuariosSubscriptionPayload {
+  mutation: MutationType!
+  node: usuarios
+  updatedFields: [String!]
+  previousValues: usuariosPreviousValues
+}
+
+input usuariosSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: usuariosWhereInput
+  AND: [usuariosSubscriptionWhereInput!]
+}
+
+input usuariosUpdateInput {
+  email: String
+  password: String
+  tokens: usuariosUpdatetokensInput
+}
+
+input usuariosUpdateManyMutationInput {
+  email: String
+  password: String
+  tokens: usuariosUpdatetokensInput
+}
+
+input usuariosUpdatetokensInput {
+  set: [String!]
+}
+
+input usuariosWhereInput {
+  _id: ID
+  _id_not: ID
+  _id_in: [ID!]
+  _id_not_in: [ID!]
+  _id_lt: ID
+  _id_lte: ID
+  _id_gt: ID
+  _id_gte: ID
+  _id_contains: ID
+  _id_not_contains: ID
+  _id_starts_with: ID
+  _id_not_starts_with: ID
+  _id_ends_with: ID
+  _id_not_ends_with: ID
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  AND: [usuariosWhereInput!]
+}
+
+input usuariosWhereUniqueInput {
+  _id: ID
 }
 `
