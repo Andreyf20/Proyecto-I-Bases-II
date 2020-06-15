@@ -1,9 +1,17 @@
-type Producto @db(name: "productos") {
+type productos {
   _id: ID! @id
   cantidad: Float
   codigo: Float
   enabled: Float
   nombre: String
   precio: Float
+  productor: String
   provincia: Float
+}
+
+type usuarios {
+  _id: ID! @id
+  email: String
+  password: String
+  tokens: [String]
 }
