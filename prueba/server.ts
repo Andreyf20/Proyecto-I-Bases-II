@@ -12,4 +12,4 @@ app.use(bodyParser.json());
 //routes
 app.use('/', apiRouter);
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 3000);

@@ -1,9 +1,8 @@
+const jwt = require('jsonwebtoken')
 
-//TODO XD
 
-const auth = async (req, res, next) => {
-    console.log(req.method)
-    next()
+export async function generateAuthToken(user) {
+  const token = jwt.sign({_id : user._id.toString()}, "lonnis")
+
+  return token;
 }
-
-export = auth
