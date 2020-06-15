@@ -33,7 +33,9 @@ router.get('/login',checkJwt, async (req, res)=> {
     if(res.statusCode == 401)
       res.status(401).send({error : 'Unauthorized'})
 
-    res.status(500).send({error : 'Server error :/'});
+    res.status(500).send({error : 'Server error :/',
+                          message : error.message}
+                          );
   }
 
 })

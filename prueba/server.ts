@@ -4,7 +4,7 @@ const apiRouter = require('./api/index');
 const express = require('express');
 const app = express();
 
-var PORT = 8080
+var PORT = process.env.PORT || 8080
 
 //middlewares
 app.use(morgan('dev'));
@@ -15,8 +15,15 @@ app.use('/', apiRouter);
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        res.status(401).send({error : 'Unauthorized :('});
+        try{
+            res.status(401).send({error : 'Unauthorized :('});
+        }
+
+        catch(e){
+            res.status(500).send({error : 'Internal Auth Error'});
+        }
     }
+
 });
 
 app.listen(PORT, () => {
