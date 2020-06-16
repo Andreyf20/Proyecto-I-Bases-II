@@ -1,4 +1,4 @@
-import { checkJwt } from "../middleware/auth";
+import { checkJwt, getUserFromPayload } from "../middleware/auth";
 
 const { prisma } = require('../generated/prisma-client')
 const express = require('express');
@@ -17,22 +17,17 @@ router.get('/productos', async (req, res)=> {
   res.send(allProducts)
 })
 
-router.get('/login',checkJwt, async (req, res)=> {
+router.get('/login',checkJwt, getUserFromPayload,async (req, res)=> {
   try {
-    const user = {
-      _id : 1,
-      nombre : "Mauricio"
-      } //TODO Quitar esto, remplazar por .findByCredentials()
-
+    
+    const user = req.user
+    //TODO Quitar esto, remplazar por .findByCredentials()
     const token = await jwt.generateAuthToken(user)
 
     res.send({user,token})
   } 
   
   catch (error) {
-    if(res.statusCode == 401)
-      res.status(401).send({error : 'Unauthorized'})
-
     res.status(500).send({error : 'Server error :/',
                           message : error.message}
                           );
