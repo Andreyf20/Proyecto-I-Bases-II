@@ -1,6 +1,4 @@
 import { checkJwt, getUserFromPayload } from "../middleware/auth";
-
-const { prisma } = require('../generated/prisma-client')
 const express = require('express');
 var router = express.Router();
 var jwt = require('../middleware/auth')
@@ -10,11 +8,8 @@ var jwt = require('../middleware/auth')
 const allProducts=await prisma.productoes();
 console.log(allProducts)*/
 
-router.get('/', async ()=> { })
-
-router.get('/productos', async (req, res)=> {
-  const allProducts=await prisma.productoes();
-  res.send(allProducts)
+router.get('/', async ()=> { 
+  //TODO 
 })
 
 router.get('/login',checkJwt, getUserFromPayload,async (req, res)=> {
