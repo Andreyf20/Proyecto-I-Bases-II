@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node server.ts",
-    "dev": "nodemon server.ts"
+    "start": "ts-node app.ts",
+    "dev": "nodemon app.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,11 +14,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.3",
-    "graphql": "^15.1.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
-    "prisma": "^1.34.10",
-    "prisma-client-lib": "^1.34.10",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
