@@ -19,3 +19,25 @@ export async function generateAuthToken(user) {
   //TODO save token to user
   return token;
 }
+
+export async function getUserFromPayload(req,res,next){
+  try {
+    if(!req.user._id)
+      throw new Error("User not found")
+
+    const user = {
+      _id : 2,
+      nombre : "Mauricio"
+    } //TODO Quitar esto, remplazar por .findOne() con el _id del payload 
+    
+    user['_id'] = req.user._id //Ejemplo de como se obtiene el id del usuario
+
+    req.user = user
+
+    next()
+  } 
+  
+  catch (error) {
+    res.status(401).send({error : error.message})
+  }
+}
