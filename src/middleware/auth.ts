@@ -16,7 +16,6 @@ export async function generateAuthToken(user) {
                                       {audience:  process.env.AUTH0_AUDIENCE,
                                         issuer: process.env.AUTH0_ISSUER
                                       })
-  //TODO save token to user
   return token;
 }
 
