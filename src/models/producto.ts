@@ -33,7 +33,8 @@ const ProductoSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
-  }
+  },
+  { collection: "productos" }
 );
 
 const Producto = mongoose.model("Producto", ProductoSchema);

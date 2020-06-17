@@ -3,9 +3,9 @@ const validator = require("validator");
 const bycript = require("bcryptjs");
 import { generateAuthToken } from "../middleware/auth";
 
-const userSchema = new mongoose.Schema(
+const UsuariosSchema = new mongoose.Schema(
   {
-    name: {
+    nombre: {
       type: String,
       required: [true, "User's name is required"],
     },
@@ -21,15 +21,15 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    birthday: {
-      type: String,
-
-      validate(value) {
-        if (value < 0) throw new Error("Age most be positive number");
-      },
+    cumpleaños: {
+      type: Date,
+      // TODO: validar la fecha
+      // validate(value) {
+      //   if (value < 0) throw new Error("Age most be positive number");
+      // },
     },
 
-    password: {
+    contraseña: {
       type: String,
       required: [true, "Must specify a password"],
       trim: true,
@@ -45,13 +45,14 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
+  { collection: "usuarios", versionKey: false },
   {
     timestamps: true,
   }
 );
 
-userSchema.statics.findByCredentials = async (email, password) => {
-  const user = await User.findOne({ email });
+UsuariosSchema.statics.findByCredentials = async (email, password) => {
+  const user = await Usuario.findOne({ email });
 
   if (!user) throw new Error("Incorrect email or password");
 
@@ -62,7 +63,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-userSchema.methods.toJSON = function () {
+UsuariosSchema.methods.toJSON = function () {
   const user = this;
   const userObj = user.toObject();
 
@@ -72,7 +73,7 @@ userSchema.methods.toJSON = function () {
   return userObj;
 };
 
-userSchema.methods.newAuthToken = async function () {
+UsuariosSchema.methods.newAuthToken = async function () {
   const user = this;
   const token = await generateAuthToken(user);
 
@@ -83,7 +84,7 @@ userSchema.methods.newAuthToken = async function () {
 };
 
 //Hash user password before saving
-userSchema.pre("save", async function (next) {
+UsuariosSchema.pre("save", async function (next) {
   const user = this;
 
   if (user.isModified("password"))
@@ -92,6 +93,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.model("User", userSchema);
+const Usuario = mongoose.model("Usuario", UsuariosSchema);
 
-module.exports = User;
+module.exports = Usuario;
