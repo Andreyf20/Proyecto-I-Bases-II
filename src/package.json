@@ -12,11 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^14.0.13",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.3",
-    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.8.0",
     "morgan": "^1.10.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5",

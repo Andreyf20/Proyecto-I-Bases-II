@@ -1,22 +1,34 @@
-const jwt = require('jsonwebtoken')
-const expjwt = require("express-jwt");
+const jwt = require("express-jwt");
+const jwksRsa = require('jwks-rsa')
 const dotenv = require("dotenv");
+const axios = require('axios')
 
 dotenv.config();
 
-export const checkJwt = expjwt({
-      secret: process.env.AUTH0_SECRET,
-      audience: process.env.AUTH0_AUDIENCE,
-      issuer: process.env.AUTH0_ISSUER,
-      algorithms: ["HS256"]
-    });
+export const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `${process.env.AUTH0_ISSUER}.well-known/jwks.json`
+  }),
+
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `${process.env.AUTH0_ISSUER}`,
+  algorithms: ["RS256"]
+});
 
 export async function generateAuthToken(user) {
-  const token = jwt.sign({_id : user._id.toString()}, process.env.AUTH0_SECRET,
-                                      {audience:  process.env.AUTH0_AUDIENCE,
-                                        issuer: process.env.AUTH0_ISSUER
-                                      })
-  return token;
+  const token = await axios.post(`${process.env.AUTH0_ISSUER}oauth/token`, 
+                    {   "_id" : 1, //TODO Revisar como mandar esto al payload
+                        "client_id":process.env.AUTH0_CLIENT_ID,
+                        "client_secret":process.env.AUTH0_CLIENT_SECRET,
+                        "audience":process.env.AUTH0_AUDIENCE,
+                        "grant_type":"client_credentials"
+                    },
+                    {'content-type': 'application/json'})
+
+    return token
 }
 
 export async function getUserFromPayload(req,res,next){

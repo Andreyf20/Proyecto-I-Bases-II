@@ -1,4 +1,4 @@
-import { checkJwt, getUserFromPayload } from "../middleware/auth";
+import { checkJwt, getUserFromPayload, generateAuthToken } from "../middleware/auth";
 const express = require('express');
 var router = express.Router();
 
@@ -11,29 +11,14 @@ router.get('/', async ()=> {
   //TODO 
 })
 
-router.get('/login',checkJwt, getUserFromPayload,async (req, res)=> {
-  var user;
-
+router.get('/login', async (req, res)=> {
   try {
-    try {
-      user = req.user // TODO Uncomment await User.findByCredentials(req.body.email, req.body.password)
-    } catch (error) {
-      res.status(401).send({error : 'Unauthorized',
-                            message : error.message
-                          })
-    }
-    
-    const token = await user.newAuthToken()
-
-    res.send({user,token})
-  } 
-  
-  catch (error) {
-    res.status(500).send({error : 'Server error :/',
-                          message : error.message
-                        });
-  }
-
+    var token = await generateAuthToken(null);
+    res.send({token : token.data.access_token})
+      
+  } catch (error) {
+    res.send(error)
+  }   
 })
 
 export = router;
