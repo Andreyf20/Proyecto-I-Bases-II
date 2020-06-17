@@ -4,6 +4,7 @@ const express = require("express");
 var router = express.Router();
 const mongoose = require("mongoose");
 const Product = require("../models/producto");
+const Usuario = require("../models/user");
 const authenticationEnabled = false;
 
 var dbConfig = {
@@ -65,7 +66,6 @@ router.get("/Productos", async (req, res, next) => {
     .exec()
     .then((prod) => {
       // TODO: validar con el lint??
-      console.log(prod);
       res.status(200).json(prod);
     })
     .catch((err) => {
@@ -77,11 +77,11 @@ router.get("/Productos", async (req, res, next) => {
     });
 });
 
-router.get("/Productos/:lat/:lon", async (req, res, next) => {
-  const lat = req.params.lat;
+router.get("/Productos/:lon/:lat", async (req, res, next) => {
   const lon = req.params.lon;
-  console.log("" + lat + " : " + lon);
-  res.send("" + lat + " : " + lon);
+  const lat = req.params.lat;
+  console.log("" + lon + " : " + lat);
+  res.status(200);
   next();
 });
 
