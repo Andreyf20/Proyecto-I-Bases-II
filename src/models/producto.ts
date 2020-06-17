@@ -3,28 +3,32 @@ const validator = require('validator')
 
 const productSchema= new mongoose.Schema({
 
-    name:{
+    nombre:{
         type : String,
         required : [true, "Product's name is required"]
     },
-    quantity: {
+    cantidad: {
         type : Number,
         required : [true, "Quantity is required"]
     },
-    code: {
+    codigo: {
         type : Number,
         required : [true, "Code name is required"]
     },
-    producer:{
+    productor:{
         type : String,
         required : [true, "Producer name is required"]
     },
-    zone:{
+    provincia:{
         type : Number,
         required : [true, "Zone number is required"]
     },
-    price:{
+    precio:{
         type : Number,
         required : [true, "Price is required"]
+    },
+    enabled:{
+        type: Number,
+        required: [true,"Enabled is required"]
     }
 });
