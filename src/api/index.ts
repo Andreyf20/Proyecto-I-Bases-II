@@ -2,7 +2,9 @@ import { env } from "process";
 
 import {generateAuthToken } from "../middleware/auth";
 
-const express = require('express');
+const getProvincia = require('./distance.ts');
+
+const express = require("express");
 var router = express.Router();
 
 const mongoose = require("mongoose");
@@ -48,7 +50,7 @@ function getConnection() {
   }
 }
 
-getConnection();
+//getConnection();
 
 router.get("/", async (req, res, next) => {
   res.send("ROOT DIR");
@@ -95,7 +97,8 @@ router.get("/Productos/:lon/:lat", async (req, res, next) => {
   const lon = req.params.lon;
   const lat = req.params.lat;
 
-  console.log("" + lon + " : " + lat);
+  var provincia = getProvincia([lon, lat]);
+  console.log("Provincia: " + provincia + " Lon: " + lon + " Lat: " + lat);
   res.status(200);
   next();
 });
