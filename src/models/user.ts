@@ -36,10 +36,6 @@ const userSchema = new mongoose.Schema( {
             required : [true, "Must specify a password"],
             trim : true,
             minlength : [7, "Password must be at least length 7"],
-            validate(value) {
-                if(value.toLowerCase().includes("password"))
-                    throw new Error("Password cannot contain the word 'password'")
-            }
         },
 
         tokens : [{

@@ -12,8 +12,17 @@ router.get('/', async ()=> {
 })
 
 router.get('/login',checkJwt, getUserFromPayload,async (req, res)=> {
+  var user;
+
   try {
-    const user = req.user // TODO Uncomment await User.findByCredentials(req.body.email, req.body.password)
+    try {
+      user = req.user // TODO Uncomment await User.findByCredentials(req.body.email, req.body.password)
+    } catch (error) {
+      res.status(401).send({error : 'Unauthorized',
+                            message : error.message
+                          })
+    }
+    
     const token = await user.newAuthToken()
 
     res.send({user,token})
