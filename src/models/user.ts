@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema( {
             }
         },
 
-        age : {
-            type : Number,
+        birthday : {
+            type : String,
 
             validate(value){ 
                 if(value < 0)
