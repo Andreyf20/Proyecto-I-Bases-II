@@ -50,19 +50,39 @@ function getConnection() {
   }
 }
 
-//getConnection();
+getConnection();
 
-router.get("/", async (req, res, next) => {
-  res.send("ROOT DIR");
-  next();
-});
+// router.get("/", async (req, res, next) => {
+//   res.send("ROOT DIR");
+//   next();
+// });
 
 router.post("/agregarProducto", async (req, res, next) => {
-  const newProduct = req.body.producto;
+  const newProductJson = req.body.producto;
   // TODO: validar con el lint
-  console.log(newProduct);
-  res.send("Product succesfully added");
-  next();
+  console.log(newProductJson);
+  const newProduct = new Product({
+    nombre: newProductJson.nombre,
+    cantidad: newProductJson.cantidad,
+    codigo: newProductJson.codigo,
+    productor: newProductJson.productor,
+    provincia: newProductJson.provincia,
+    precio: newProductJson.precio,
+    enabled: 1,
+  });
+
+  newProduct
+    .save()
+    .then(() => {
+      res.status(200).json(newProduct);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    })
+    .finally(() => {
+      next();
+    });
 });
 
 router.get("/Productos", async (req, res, next) => {
@@ -70,7 +90,6 @@ router.get("/Productos", async (req, res, next) => {
   Product.find()
     .exec()
     .then((prod) => {
-      // TODO: validar con el lint??
       res.status(200).json(prod);
     })
     .catch((err) => {
@@ -94,13 +113,26 @@ router.get('/login', async (req, res)=> {
 
 
 router.get("/Productos/:lon/:lat", async (req, res, next) => {
+  // TODO: valiadar los tokens??
   const lon = req.params.lon;
   const lat = req.params.lat;
 
   var provincia = getProvincia([lon, lat]);
   console.log("Provincia: " + provincia + " Lon: " + lon + " Lat: " + lat);
-  res.status(200);
-  next();
+  Product.find()
+    .where("provincia")
+    .in(provincia)
+    .exec()
+    .then((prod) => {
+      res.status(200).json(prod);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    })
+    .finally(() => {
+      next();
+    });
 });
 
 export = router;
