@@ -10,17 +10,19 @@ const puntosdereferencia: [number, number][] = [
   buenosaires,
 ];
 
-module.exports = function calcularDistanciaEuclideana(puntoNuevo: [number, number]) {
-    var distances: number[] = []; //Guardo las distancias aqui
-  
-    puntosdereferencia.forEach((coordinateTuple) => {
-      const partial =
-        Math.pow(coordinateTuple[0] - puntoNuevo[0], 2) +
-        Math.pow(coordinateTuple[1] - puntoNuevo[1], 2);
-      distances.push(Math.sqrt(partial)); //Adds to array of distances
-    });
-    console.log(distances);
-    var min = Math.min(...distances); //Saco el min del array
-    //var nombres: string[] = ["Tibas", "Buenos Aires", "Tres Rios", "San Pablo"];
-    return distances.indexOf(min);
-}
+module.exports = function calcularDistanciaEuclideana(
+  puntoNuevo: [number, number]
+) {
+  var distances: number[] = []; //Guardo las distancias aqui
+
+  puntosdereferencia.forEach((coordinateTuple) => {
+    const partial =
+      Math.pow(coordinateTuple[0] - puntoNuevo[0], 2) +
+      Math.pow(coordinateTuple[1] - puntoNuevo[1], 2);
+    distances.push(Math.sqrt(partial)); //Adds to array of distances
+  });
+  console.log(distances);
+  var min = Math.min(...distances); //Saco el min del array
+  //var nombres: string[] = ["Tibas", "Buenos Aires", "Tres Rios", "San Pablo"];
+  return distances.indexOf(min);
+};

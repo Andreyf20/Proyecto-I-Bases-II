@@ -23,17 +23,13 @@ const UsuariosSchema = new mongoose.Schema(
 
     cumpleaños: {
       type: Date,
-      // TODO: validar la fecha
-      // validate(value) {
-      //   if (value < 0) throw new Error("Age most be positive number");
-      // },
     },
 
     contraseña: {
       type: String,
       required: [true, "Must specify a password"],
       trim: true,
-      minlength: [7, "Password must be at least length 7"],
+      minlength: [4, "Password must be at least length 7"],
     },
 
     tokens: [
@@ -45,6 +41,7 @@ const UsuariosSchema = new mongoose.Schema(
       },
     ],
   },
+
   { collection: "usuarios", versionKey: false },
   {
     timestamps: true,
@@ -52,43 +49,46 @@ const UsuariosSchema = new mongoose.Schema(
 );
 
 UsuariosSchema.statics.findByCredentials = async (email, password) => {
-  const user = await Usuario.findOne({ email });
+  const user = await Usuario.find().where("email").in(email).exec();
 
   if (!user) throw new Error("Incorrect email or password");
 
-  const isMatch = await bycript.compare(password, user.password);
-
+  const isMatch = await bycript.compare(password, user[0]["contraseña"]);
   if (!isMatch) throw new Error("Incorrect email or password");
 
-  return user;
+  return user[0];
 };
 
 UsuariosSchema.methods.toJSON = function () {
   const user = this;
   const userObj = user.toObject();
 
-  delete userObj.password;
+  delete userObj.contraseña;
   delete userObj.tokens;
-
   return userObj;
 };
 
 UsuariosSchema.methods.newAuthToken = async function () {
-  const user = this;
-  const token = await generateAuthToken(user);
+  try {
+    const user = this;
+    const token = await generateAuthToken(user);
 
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
+    user.tokens.push({ token: token });
 
-  return token;
+    await user.save();
+
+    return token;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 //Hash user password before saving
 UsuariosSchema.pre("save", async function (next) {
   const user = this;
 
-  if (user.isModified("password"))
-    user.password = await bycript.hash(user.password, 8);
+  if (user.isModified("contraseña"))
+    user["contraseña"] = await bycript.hash(user["contraseña"], 7);
 
   next();
 });
