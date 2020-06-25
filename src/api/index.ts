@@ -1,8 +1,8 @@
 import { env } from "process";
 
-import {generateAuthToken } from "../middleware/auth";
+import { generateAuthToken, checkJwt } from "../middleware/auth";
 
-const getProvincia = require('./distance.ts');
+const getProvincia = require("./distance.ts");
 
 const express = require("express");
 var router = express.Router();
@@ -52,12 +52,27 @@ function getConnection() {
 
 getConnection();
 
-// router.get("/", async (req, res, next) => {
-//   res.send("ROOT DIR");
-//   next();
-// });
+router.get("/login", async (req, res) => {
+  var user;
+  var token;
 
-router.post("/agregarProducto", async (req, res, next) => {
+  try {
+    try {
+      user = await Usuario.findByCredentials(req.body.email, req.body.password);
+    } catch (e) {
+      res.status(401).send({ error: e.message });
+      return;
+    }
+
+    token = await user.newAuthToken();
+
+    res.send({ user, token: token.access_token });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+router.post("/agregarProducto", checkJwt, async (req, res, next) => {
   const newProductJson = req.body.producto;
   // TODO: validar con el lint
   console.log(newProductJson);
@@ -85,8 +100,7 @@ router.post("/agregarProducto", async (req, res, next) => {
     });
 });
 
-router.get("/Productos", async (req, res, next) => {
-  // TODO: valiadar los tokens??
+router.get("/Productos", checkJwt, async (req, res, next) => {
   Product.find()
     .exec()
     .then((prod) => {
@@ -101,19 +115,7 @@ router.get("/Productos", async (req, res, next) => {
     });
 });
 
-router.get('/login', async (req, res)=> {
-  try {
-    var token = await generateAuthToken(null);
-    res.send({token : token.data.access_token})
-      
-  } catch (error) {
-    res.send(error)
-  }   
-})
-
-
-router.get("/Productos/:lon/:lat", async (req, res, next) => {
-  // TODO: valiadar los tokens??
+router.get("/Productos/:lon/:lat", checkJwt, async (req, res, next) => {
   const lon = req.params.lon;
   const lat = req.params.lat;
 
