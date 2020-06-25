@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bycript = require("bcryptjs");
-import { generateAuthToken } from "../middleware/auth";
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bycript = require('bcryptjs');
+import { generateAuthToken } from '../middleware/auth';
 
 const UsuariosSchema = new mongoose.Schema(
   {
@@ -17,7 +17,7 @@ const UsuariosSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       validate(value) {
-        if (!validator.isEmail(value)) throw new Error("Email is invalid");
+        if (!validator.isEmail(value)) throw new Error('Email is invalid');
       },
     },
 
@@ -27,9 +27,9 @@ const UsuariosSchema = new mongoose.Schema(
 
     contraseña: {
       type: String,
-      required: [true, "Must specify a password"],
+      required: [true, 'Must specify a password'],
       trim: true,
-      minlength: [4, "Password must be at least length 7"],
+      minlength: [4, 'Password must be at least length 7'],
     },
 
     tokens: [
@@ -42,19 +42,19 @@ const UsuariosSchema = new mongoose.Schema(
     ],
   },
 
-  { collection: "usuarios", versionKey: false },
+  { collection: 'usuarios', versionKey: false },
   {
     timestamps: true,
   }
 );
 
 UsuariosSchema.statics.findByCredentials = async (email, password) => {
-  const user = await Usuario.find().where("email").in(email).exec();
+  const user = await Usuario.find().where('email').in(email).exec();
 
-  if (!user) throw new Error("Incorrect email or password");
+  if (!user) throw new Error('Incorrect email or password');
 
-  const isMatch = await bycript.compare(password, user[0]["contraseña"]);
-  if (!isMatch) throw new Error("Incorrect email or password");
+  const isMatch = password === user[0]['contraseña'];
+  if (!isMatch) throw new Error('Incorrect email or password');
 
   return user[0];
 };
@@ -84,15 +84,14 @@ UsuariosSchema.methods.newAuthToken = async function () {
 };
 
 //Hash user password before saving
-UsuariosSchema.pre("save", async function (next) {
+UsuariosSchema.pre('save', async function (next) {
   const user = this;
 
-  if (user.isModified("contraseña"))
-    user["contraseña"] = await bycript.hash(user["contraseña"], 7);
+  if (user.isModified('contraseña')) user['contraseña'] = await bycript.hash(user['contraseña'], 7);
 
   next();
 });
 
-const Usuario = mongoose.model("Usuario", UsuariosSchema);
+const Usuario = mongoose.model('Usuario', UsuariosSchema);
 
 module.exports = Usuario;
