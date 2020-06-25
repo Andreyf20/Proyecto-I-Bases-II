@@ -1,29 +1,25 @@
-import { env } from "process";
+import { env } from 'process';
 
-import { generateAuthToken, checkJwt } from "../middleware/auth";
+import { generateAuthToken, checkJwt } from '../middleware/auth';
 
-const getProvincia = require("./distance.ts");
+const getProvincia = require('./distance.ts');
 
-const express = require("express");
-var router = express.Router();
+const express = require('express');
+let router = express.Router();
 
-const mongoose = require("mongoose");
-const Product = require("../models/producto");
-const Usuario = require("../models/user");
+const mongoose = require('mongoose');
+const Product = require('../models/producto');
+const Usuario = require('../models/user');
 const authenticationEnabled = false;
 
-var dbConfig = {
-  url: env["MONGO_URL"],
-  user: env["MONGO_USER"],
-  pwd: env["MONGO_PWD"],
+let dbConfig = {
+  url: env['MONGO_URL'],
+  user: env['MONGO_USER'],
+  pwd: env['MONGO_PWD'],
 };
 
 function getConnection() {
-  if (
-    dbConfig.user !== "NULL" &&
-    dbConfig.pwd !== "NULL" &&
-    authenticationEnabled
-  ) {
+  if (dbConfig.user !== 'NULL' && dbConfig.pwd !== 'NULL' && authenticationEnabled) {
     mongoose
       .connect(dbConfig.url, {
         useNewUrlParser: true,
@@ -31,10 +27,10 @@ function getConnection() {
         pass: dbConfig.pwd,
       })
       .then(() => {
-        console.log("successfully connected to the database");
+        console.log('successfully connected to the database');
       })
       .catch(() => {
-        console.log("error connecting to the database");
+        console.log('error connecting to the database');
       });
   } else {
     mongoose
@@ -42,19 +38,19 @@ function getConnection() {
         useNewUrlParser: true,
       })
       .then(() => {
-        console.log("successfully connected to the database");
+        console.log('successfully connected to the database');
       })
       .catch(() => {
-        console.log("error connecting to the database");
+        console.log('error connecting to the database');
       });
   }
 }
 
 getConnection();
 
-router.get("/login", async (req, res) => {
-  var user;
-  var token;
+router.get('/login', async (req, res) => {
+  let user;
+  let token;
 
   try {
     try {
@@ -66,22 +62,24 @@ router.get("/login", async (req, res) => {
 
     token = await user.newAuthToken();
 
-    res.send({ user, token: token.access_token });
+    res.send({ user, token });
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
-router.post("/agregarProducto", checkJwt, async (req, res, next) => {
+router.post('/agregarProducto', checkJwt, async (req, res, next) => {
   const newProductJson = req.body.producto;
-  // TODO: validar con el lint
+  const lon = req.body.lon;
+  const lat = req.body.lat;
+  const provincia = getProvincia([lon, lat]);
   console.log(newProductJson);
   const newProduct = new Product({
     nombre: newProductJson.nombre,
     cantidad: newProductJson.cantidad,
     codigo: newProductJson.codigo,
     productor: newProductJson.productor,
-    provincia: newProductJson.provincia,
+    provincia: provincia,
     precio: newProductJson.precio,
     enabled: 1,
   });
@@ -100,7 +98,7 @@ router.post("/agregarProducto", checkJwt, async (req, res, next) => {
     });
 });
 
-router.get("/Productos", checkJwt, async (req, res, next) => {
+router.get('/Productos', checkJwt, async (req, res, next) => {
   Product.find()
     .exec()
     .then((prod) => {
@@ -115,14 +113,14 @@ router.get("/Productos", checkJwt, async (req, res, next) => {
     });
 });
 
-router.get("/Productos/:lon/:lat", checkJwt, async (req, res, next) => {
+router.get('/Productos/:lon/:lat', checkJwt, async (req, res, next) => {
   const lon = req.params.lon;
   const lat = req.params.lat;
 
-  var provincia = getProvincia([lon, lat]);
-  console.log("Provincia: " + provincia + " Lon: " + lon + " Lat: " + lat);
+  const provincia = getProvincia([lon, lat]);
+  console.log('Provincia: ' + provincia + ' Lon: ' + lon + ' Lat: ' + lat);
   Product.find()
-    .where("provincia")
+    .where('provincia')
     .in(provincia)
     .exec()
     .then((prod) => {

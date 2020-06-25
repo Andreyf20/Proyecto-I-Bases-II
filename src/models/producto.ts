@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const ProductoSchema = new mongoose.Schema(
   {
@@ -8,35 +8,35 @@ const ProductoSchema = new mongoose.Schema(
     },
     cantidad: {
       type: Number,
-      required: [true, "Quantity is required"],
+      required: [true, 'Quantity is required'],
     },
     codigo: {
       type: Number,
-      required: [true, "Code name is required"],
+      required: [true, 'Code name is required'],
     },
     productor: {
       type: String,
-      required: [true, "Producer name is required"],
+      required: [true, 'Producer name is required'],
     },
     provincia: {
       type: Number,
-      required: [true, "Zone number is required"],
+      required: [true, 'Zone number is required'],
     },
     precio: {
       type: Number,
-      required: [true, "Price is required"],
+      required: [true, 'Price is required'],
     },
     enabled: {
       type: Number,
-      required: [true, "Enabled is required"],
+      required: [true, 'Enabled is required'],
     },
   },
   {
     versionKey: false,
   },
-  { collection: "productos" }
+  { collection: 'productos' }
 );
 
-const Producto = mongoose.model("Producto", ProductoSchema);
+const Producto = mongoose.model('Producto', ProductoSchema);
 
 module.exports = Producto;
