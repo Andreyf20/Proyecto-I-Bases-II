@@ -1,0 +1,109 @@
+version: "3.0"
+
+volumes:
+  mongo-keys:
+  mongo-config-0:
+  mongo-config-1:
+  mongo-shard-0:
+  mongo-shard-1:
+  mongo-router-0:
+
+networks:
+  mongonet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+
+services:
+  mongo-keys:
+    image: depop/openssl-bats
+    volumes:
+      - mongo-keys:/mongo-conf
+    command: 'bash -c "openssl rand -base64 741 > /mongo-conf/mongodb-keyfile; chmod 600 /mongo-conf/mongodb-keyfile; chown 999 /mongo-conf/mongodb-keyfile"'
+    #command: 'bash -c "echo 1234123412341234123412341234 > /mongo-conf/mongodb-keyfile; chmod 600 /mongo-conf/mongodb-keyfile; chown 999 /mongo-conf/mongodb-keyfile"'
+
+  # Config 1
+  config1:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-config-0:/data/db
+    env_file: ./mongod.env
+    ports:
+      - 27017:27017
+    command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --replSet repconfig --port 27017"
+    depends_on:
+      - mongo-keys
+    networks:
+      mongonet:
+        ipv4_address: 10.0.0.3
+
+  # Config 2
+  config2:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-config-1:/data/db
+    env_file: ./mongod.env
+    ports:
+      - 27018:27018
+    command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --replSet repconfig --port 27018"
+    depends_on:
+      - mongo-keys
+    networks:
+      mongonet:
+        ipv4_address: 10.0.0.4
+
+  # Shard 1
+  shard1:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-shard-0:/data/db
+    env_file: ./mongod.env
+    ports:
+      - 27021:27021
+    #command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --replSet repconfig --port 27018"
+    command: "mongod --auth --port 27021 --keyFile /opt/keyfile/mongodb-keyfile --shardsvr --replSet repFrancia"
+    depends_on:
+      - mongo-keys
+    networks:
+      mongonet:
+        ipv4_address: 10.0.0.7
+
+  # Shard 2
+  shard2:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-shard-1:/data/db
+    env_file: ./mongod.env
+    ports:
+      - 27022:27022
+    #command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --replSet repconfig --port 27018"
+    command: "mongod --auth --port 27022 --keyFile /opt/keyfile/mongodb-keyfile --shardsvr --replSet repFrancia"
+    depends_on:
+      - mongo-keys
+    networks:
+      mongonet:
+        ipv4_address: 10.0.0.8
+
+  # Router
+  router1:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-router-0:/data/db
+    env_file: ./mongod.env
+    ports:
+      - 27023:27023
+    #command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --replSet repconfig --port 27018"
+    #command: "mongod --port 27022 --keyFile /opt/keyfile/mongodb-keyfile --shardsvr --replSet repFrancia"
+    command: "mongos --port 27023 --bind_ip_all --transitionToAuth --keyFile /opt/keyfile/mongodb-keyfile --configdb repconfig/10.0.0.3:27017,10.0.0.4:27018"
+    depends_on:
+      - mongo-keys
+    networks:
+      mongonet:
+        ipv4_address: 10.0.0.2

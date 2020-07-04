@@ -1,0 +1,25 @@
+version: "3.0"
+
+volumes:
+  mongo-keys:
+  mongo-config-0:
+
+services:
+  mongo-keys:
+    image: depop/openssl-bats
+    volumes:
+      - mongo-keys:/mongo-conf
+    command: 'bash -c "echo bWVjYWdvZW5sb25uaXM= > /mongo-conf/mongodb-keyfile; chmod 600 /mongo-conf/mongodb-keyfile; chown 999 /mongo-conf/mongodb-keyfile"'
+
+  # Config 1
+  config1:
+    image: mongo
+    volumes:
+      - mongo-keys:/opt/keyfile
+      - mongo-config-0:/data/db
+    env_file: ./mongod.env
+    ports:
+      - [IP DE HAMACHI]:[PUERTO]:[PUERTO]
+    command: "mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --configsvr --port [PUERTO] --replSet ReplicaConfig"
+    depends_on:
+      - mongo-keys
